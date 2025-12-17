@@ -66,10 +66,8 @@ databaseChangeLog:
             tableName: transactions
             columnNames: idempotency_key
             constraintName: unique_idempotency_key
-        - addCheckConstraint:
-            tableName: transactions
-            constraintName: amount_positive
-            checkCondition: amount > 0
+        - sql:
+            sql: ALTER TABLE transactions ADD CONSTRAINT amount_positive CHECK (amount > 0)
         - sql:
             sql: |
               ALTER TABLE transactions ADD CONSTRAINT credit_constraint CHECK (

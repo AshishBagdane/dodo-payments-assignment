@@ -44,10 +44,8 @@ databaseChangeLog:
       id: 01-add-accounts-constraints
       author: ashish-bagdane
       changes:
-        - addCheckConstraint:
-            tableName: accounts
-            constraintName: balance_non_negative
-            checkCondition: balance >= 0
+        - sql:
+            sql: ALTER TABLE accounts ADD CONSTRAINT balance_non_negative CHECK (balance >= 0)
       rollback:
         - sql:
             sql: ALTER TABLE accounts DROP CONSTRAINT balance_non_negative

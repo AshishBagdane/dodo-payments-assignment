@@ -1,15 +1,15 @@
 databaseChangeLog:
   - include:
-      file: db/changelog/2025.1.0/001-extensions.yaml
+      file: changelog/2025.1.0/001-extensions.yaml
   - include:
-      file: db/changelog/2025.1.0/accounts/001-create-table.yaml
+      file: changelog/2025.1.0/accounts/001-create-table.yaml
   - include:
-      file: db/changelog/2025.1.0/transactions/001-create-table.yaml
+      file: changelog/2025.1.0/transactions/001-create-table.yaml
   - include:
-      file: db/changelog/2025.1.0/api_keys/001-create-table.yaml
+      file: changelog/2025.1.0/api_keys/001-create-table.yaml
   - include:
-      file: db/changelog/2025.1.0/webhooks/001-create-table.yaml
+      file: changelog/2025.1.0/webhooks/001-create-table.yaml
   - include:
-      file: db/changelog/2025.1.0/webhook_deliveries/001-create-table.yaml
+      file: changelog/2025.1.0/webhook_deliveries/001-create-table.yaml
   - include:
-      file: db/changelog/2025.1.0/001-triggers.yaml
+      file: changelog/2025.1.0/001-triggers.yaml

@@ -4,6 +4,7 @@ databaseChangeLog:
       author: transaction-service
       changes:
         - sql:
+            splitStatements: false
             sql: |
               CREATE OR REPLACE FUNCTION update_updated_at_column()
               RETURNS TRIGGER AS $$
@@ -11,7 +12,7 @@ databaseChangeLog:
                   NEW.updated_at = NOW();
                   RETURN NEW;
               END;
-              $$ LANGUAGE plpgsql
+              $$ LANGUAGE plpgsql;
       rollback:
         - sql:
             sql: DROP FUNCTION IF EXISTS update_updated_at_column()
