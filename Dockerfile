@@ -36,7 +36,7 @@ RUN apt-get update && apt-get install -y \
 WORKDIR /app
 
 # Copy binary from builder
-COPY --from=builder /app/target/release/transaction-service /app/transaction-service
+COPY --from=builder /app/target/release/dodo-payments-assignment /app/dodo-payments
 
 # Create non-root user
 RUN useradd -m -u 1000 appuser && \
