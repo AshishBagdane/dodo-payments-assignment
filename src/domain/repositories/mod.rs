@@ -1,0 +1,1 @@
+// Repository traits will be defined here
