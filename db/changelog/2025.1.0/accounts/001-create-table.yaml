@@ -1,0 +1,68 @@
+databaseChangeLog:
+  - changeSet:
+      id: 01-create-accounts-table
+      author: ashish-bagdane
+      changes:
+        - createTable:
+            tableName: accounts
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  defaultValueComputed: uuid_generate_v4()
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: business_name
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: balance
+                  type: decimal(20,2)
+                  defaultValueNumeric: 0.00
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: timestamp with time zone
+                  defaultValueComputed: now()
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: timestamp with time zone
+                  defaultValueComputed: now()
+                  constraints:
+                    nullable: false
+      rollback:
+        - dropTable:
+            tableName: accounts
+
+  - changeSet:
+      id: 01-add-accounts-constraints
+      author: ashish-bagdane
+      changes:
+        - addCheckConstraint:
+            tableName: accounts
+            constraintName: balance_non_negative
+            checkCondition: balance >= 0
+      rollback:
+        - sql:
+            sql: ALTER TABLE accounts DROP CONSTRAINT balance_non_negative
+
+  - changeSet:
+      id: 01-add-accounts-indexes
+      author: ashish-bagdane
+      changes:
+        - createIndex:
+            tableName: accounts
+            indexName: idx_accounts_business_name
+            columns:
+              - column:
+                  name: business_name
+      rollback:
+        - dropIndex:
+            tableName: accounts
+            indexName: idx_accounts_business_name

@@ -1,0 +1,143 @@
+databaseChangeLog:
+  - changeSet:
+      id: 02-create-transaction-type-enum
+      author: ashish-bagdane
+      changes:
+        - sql:
+            sql: CREATE TYPE transaction_type AS ENUM ('credit', 'debit', 'transfer')
+      rollback:
+        - sql:
+            sql: DROP TYPE transaction_type
+
+  - changeSet:
+      id: 02-create-transactions-table
+      author: ashish-bagdane
+      changes:
+        - createTable:
+            tableName: transactions
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  defaultValueComputed: uuid_generate_v4()
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: transaction_type
+                  type: transaction_type
+                  constraints:
+                    nullable: false
+              - column:
+                  name: from_account_id
+                  type: uuid
+                  constraints:
+                    foreignKeyName: fk_transactions_from_account
+                    references: accounts(id)
+              - column:
+                  name: to_account_id
+                  type: uuid
+                  constraints:
+                    foreignKeyName: fk_transactions_to_account
+                    references: accounts(id)
+              - column:
+                  name: amount
+                  type: decimal(20,2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: idempotency_key
+                  type: varchar(255)
+              - column:
+                  name: created_at
+                  type: timestamp with time zone
+                  defaultValueComputed: now()
+                  constraints:
+                    nullable: false
+      rollback:
+        - dropTable:
+            tableName: transactions
+
+  - changeSet:
+      id: 02-add-transactions-constraints
+      author: ashish-bagdane
+      changes:
+        - addUniqueConstraint:
+            tableName: transactions
+            columnNames: idempotency_key
+            constraintName: unique_idempotency_key
+        - addCheckConstraint:
+            tableName: transactions
+            constraintName: amount_positive
+            checkCondition: amount > 0
+        - sql:
+            sql: |
+              ALTER TABLE transactions ADD CONSTRAINT credit_constraint CHECK (
+                (transaction_type = 'credit' AND from_account_id IS NULL AND to_account_id IS NOT NULL) OR
+                (transaction_type != 'credit')
+              )
+        - sql:
+            sql: |
+              ALTER TABLE transactions ADD CONSTRAINT debit_constraint CHECK (
+                (transaction_type = 'debit' AND from_account_id IS NOT NULL AND to_account_id IS NULL) OR
+                (transaction_type != 'debit')
+              )
+        - sql:
+            sql: |
+              ALTER TABLE transactions ADD CONSTRAINT transfer_constraint CHECK (
+                (transaction_type = 'transfer' AND from_account_id IS NOT NULL AND to_account_id IS NOT NULL AND from_account_id != to_account_id) OR
+                (transaction_type != 'transfer')
+              )
+      rollback:
+        - sql:
+            sql: |
+              ALTER TABLE transactions 
+              DROP CONSTRAINT IF EXISTS unique_idempotency_key,
+              DROP CONSTRAINT IF EXISTS amount_positive,
+              DROP CONSTRAINT IF EXISTS credit_constraint,
+              DROP CONSTRAINT IF EXISTS debit_constraint,
+              DROP CONSTRAINT IF EXISTS transfer_constraint
+
+  - changeSet:
+      id: 02-add-transactions-indexes
+      author: ashish-bagdane
+      changes:
+        - createIndex:
+            tableName: transactions
+            indexName: idx_transactions_from_account
+            columns:
+              - column:
+                  name: from_account_id
+        - createIndex:
+            tableName: transactions
+            indexName: idx_transactions_to_account
+            columns:
+              - column:
+                  name: to_account_id
+        - createIndex:
+            tableName: transactions
+            indexName: idx_transactions_created_at
+            columns:
+              - column:
+                  name: created_at
+                  descending: true
+        - createIndex:
+            tableName: transactions
+            indexName: idx_transactions_idempotency_key
+            columns:
+              - column:
+                  name: idempotency_key
+            where: idempotency_key IS NOT NULL
+      rollback:
+        - dropIndex:
+            tableName: transactions
+            indexName: idx_transactions_from_account
+        - dropIndex:
+            tableName: transactions
+            indexName: idx_transactions_to_account
+        - dropIndex:
+            tableName: transactions
+            indexName: idx_transactions_created_at
+        - dropIndex:
+            tableName: transactions
+            indexName: idx_transactions_idempotency_key

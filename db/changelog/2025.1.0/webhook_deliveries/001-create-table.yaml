@@ -1,0 +1,125 @@
+databaseChangeLog:
+  - changeSet:
+      id: 05-create-delivery-status-enum
+      author: ashish-bagdane
+      changes:
+        - sql:
+            sql: CREATE TYPE delivery_status AS ENUM ('pending', 'success', 'failed', 'retrying')
+      rollback:
+        - sql:
+            sql: DROP TYPE delivery_status
+
+  - changeSet:
+      id: 05-create-webhook-deliveries-table
+      author: ashish-bagdane
+      changes:
+        - createTable:
+            tableName: webhook_deliveries
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  defaultValueComputed: uuid_generate_v4()
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: webhook_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_webhook_deliveries_webhook
+                    references: webhooks(id)
+                    deleteCascade: true
+              - column:
+                  name: transaction_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_webhook_deliveries_transaction
+                    references: transactions(id)
+                    deleteCascade: true
+              - column:
+                  name: event_type
+                  type: webhook_event
+                  constraints:
+                    nullable: false
+              - column:
+                  name: status
+                  type: delivery_status
+                  defaultValue: pending
+                  constraints:
+                    nullable: false
+              - column:
+                  name: attempts
+                  type: integer
+                  defaultValueNumeric: 0
+                  constraints:
+                    nullable: false
+              - column:
+                  name: last_attempt_at
+                  type: timestamp with time zone
+              - column:
+                  name: next_retry_at
+                  type: timestamp with time zone
+              - column:
+                  name: response_status_code
+                  type: integer
+              - column:
+                  name: response_body
+                  type: text
+              - column:
+                  name: created_at
+                  type: timestamp with time zone
+                  defaultValueComputed: now()
+                  constraints:
+                    nullable: false
+              - column:
+                  name: completed_at
+                  type: timestamp with time zone
+      rollback:
+        - dropTable:
+            tableName: webhook_deliveries
+
+  - changeSet:
+      id: 05-add-webhook-deliveries-indexes
+      author: ashish-bagdane
+      changes:
+        - createIndex:
+            tableName: webhook_deliveries
+            indexName: idx_webhook_deliveries_webhook
+            columns:
+              - column:
+                  name: webhook_id
+        - createIndex:
+            tableName: webhook_deliveries
+            indexName: idx_webhook_deliveries_transaction
+            columns:
+              - column:
+                  name: transaction_id
+        - createIndex:
+            tableName: webhook_deliveries
+            indexName: idx_webhook_deliveries_status
+            columns:
+              - column:
+                  name: status
+        - createIndex:
+            tableName: webhook_deliveries
+            indexName: idx_webhook_deliveries_next_retry
+            columns:
+              - column:
+                  name: next_retry_at
+            where: status = 'retrying'
+      rollback:
+        - dropIndex:
+            tableName: webhook_deliveries
+            indexName: idx_webhook_deliveries_webhook
+        - dropIndex:
+            tableName: webhook_deliveries
+            indexName: idx_webhook_deliveries_transaction
+        - dropIndex:
+            tableName: webhook_deliveries
+            indexName: idx_webhook_deliveries_status
+        - dropIndex:
+            tableName: webhook_deliveries
+            indexName: idx_webhook_deliveries_next_retry

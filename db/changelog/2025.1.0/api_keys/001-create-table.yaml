@@ -1,0 +1,71 @@
+databaseChangeLog:
+  - changeSet:
+      id: 03-create-api-keys-table
+      author: ashish-bagdane
+      changes:
+        - createTable:
+            tableName: api_keys
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  defaultValueComputed: uuid_generate_v4()
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: key_hash
+                  type: varchar(64)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: account_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_api_keys_account
+                    references: accounts(id)
+                    deleteCascade: true
+              - column:
+                  name: rate_limit_per_hour
+                  type: integer
+                  defaultValueNumeric: 1000
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: timestamp with time zone
+                  defaultValueComputed: now()
+                  constraints:
+                    nullable: false
+              - column:
+                  name: last_used_at
+                  type: timestamp with time zone
+      rollback:
+        - dropTable:
+            tableName: api_keys
+
+  - changeSet:
+      id: 03-add-api-keys-indexes
+      author: ashish-bagdane
+      changes:
+        - createIndex:
+            tableName: api_keys
+            indexName: idx_api_keys_key_hash
+            columns:
+              - column:
+                  name: key_hash
+        - createIndex:
+            tableName: api_keys
+            indexName: idx_api_keys_account
+            columns:
+              - column:
+                  name: account_id
+      rollback:
+        - dropIndex:
+            tableName: api_keys
+            indexName: idx_api_keys_key_hash
+        - dropIndex:
+            tableName: api_keys
+            indexName: idx_api_keys_account

@@ -1,0 +1,45 @@
+databaseChangeLog:
+  - changeSet:
+      id: 06-create-update-timestamp-function
+      author: transaction-service
+      changes:
+        - sql:
+            sql: |
+              CREATE OR REPLACE FUNCTION update_updated_at_column()
+              RETURNS TRIGGER AS $$
+              BEGIN
+                  NEW.updated_at = NOW();
+                  RETURN NEW;
+              END;
+              $$ LANGUAGE plpgsql
+      rollback:
+        - sql:
+            sql: DROP FUNCTION IF EXISTS update_updated_at_column()
+
+  - changeSet:
+      id: 06-create-accounts-update-trigger
+      author: transaction-service
+      changes:
+        - sql:
+            sql: |
+              CREATE TRIGGER update_accounts_updated_at
+                  BEFORE UPDATE ON accounts
+                  FOR EACH ROW
+                  EXECUTE FUNCTION update_updated_at_column()
+      rollback:
+        - sql:
+            sql: DROP TRIGGER IF EXISTS update_accounts_updated_at ON accounts
+
+  - changeSet:
+      id: 06-create-webhooks-update-trigger
+      author: transaction-service
+      changes:
+        - sql:
+            sql: |
+              CREATE TRIGGER update_webhooks_updated_at
+                  BEFORE UPDATE ON webhooks
+                  FOR EACH ROW
+                  EXECUTE FUNCTION update_updated_at_column()
+      rollback:
+        - sql:
+            sql: DROP TRIGGER IF EXISTS update_webhooks_updated_at ON webhooks

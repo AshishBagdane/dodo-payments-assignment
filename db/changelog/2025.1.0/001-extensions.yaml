@@ -1,0 +1,16 @@
+databaseChangeLog:
+  - changeSet:
+      id: 00-enable-uuid-extension
+      author: transaction-service
+      preconditions:
+        - onFail: MARK_RAN
+        - not:
+            - sqlCheck:
+                expectedResult: 1
+                sql: SELECT COUNT(*) FROM pg_extension WHERE extname = 'uuid-ossp'
+      changes:
+        - sql:
+            sql: CREATE EXTENSION IF NOT EXISTS "uuid-ossp"
+      rollback:
+        - sql:
+            sql: DROP EXTENSION IF EXISTS "uuid-ossp"

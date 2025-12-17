@@ -1,0 +1,14 @@
+# SQLx Configuration
+# This file configures SQLx for compile-time query verification
+# Migrations are handled by Liquibase
+
+# Enable compile-time verification
+[query]
+# Require explicit column names (no SELECT *)
+require_all_fields = false
+
+# Database URL for offline mode preparation
+[database]
+# Run `cargo sqlx prepare` to generate .sqlx/ directory
+# This allows compilation without a live database connection
+offline = false
