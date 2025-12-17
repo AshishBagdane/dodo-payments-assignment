@@ -1,2 +1,26 @@
-/target
-/.idea
+# Rust
+/target/
+Cargo.lock
+**/*.rs.bk
+*.pdb
+
+# Environment (local overrides only)
+.env.local
+.env
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Database
+postgres_data/
+
+# SQLx offline mode cache (can be committed for CI/CD)
+# .sqlx/
