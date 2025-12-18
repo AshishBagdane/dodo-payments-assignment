@@ -1,7 +1,7 @@
 databaseChangeLog:
   - changeSet:
       id: 02-add-deleted-at-to-accounts
-      author: antigravity
+      author: ashish-bagdane
       changes:
         - addColumn:
             tableName: accounts

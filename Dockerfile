@@ -46,4 +46,4 @@ USER appuser
 
 EXPOSE 8080
 
-CMD ["/app/transaction-service"]
+CMD ["/app/dodo-payments"]

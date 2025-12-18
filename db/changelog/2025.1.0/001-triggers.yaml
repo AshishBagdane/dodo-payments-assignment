@@ -1,7 +1,7 @@
 databaseChangeLog:
   - changeSet:
       id: 06-create-update-timestamp-function
-      author: transaction-service
+      author: ashish-bagdane
       changes:
         - sql:
             splitStatements: false
@@ -19,7 +19,7 @@ databaseChangeLog:
 
   - changeSet:
       id: 06-create-accounts-update-trigger
-      author: transaction-service
+      author: ashish-bagdane
       changes:
         - sql:
             sql: |
@@ -33,7 +33,7 @@ databaseChangeLog:
 
   - changeSet:
       id: 06-create-webhooks-update-trigger
-      author: transaction-service
+      author: ashish-bagdane
       changes:
         - sql:
             sql: |

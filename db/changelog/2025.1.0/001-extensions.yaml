@@ -1,7 +1,7 @@
 databaseChangeLog:
   - changeSet:
       id: 00-enable-uuid-extension
-      author: transaction-service
+      author: ashish-bagdane
 
       preConditions:
         onFail: MARK_RAN
