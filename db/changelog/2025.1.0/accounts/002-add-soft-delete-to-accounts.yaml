@@ -1,0 +1,17 @@
+databaseChangeLog:
+  - changeSet:
+      id: 02-add-deleted-at-to-accounts
+      author: antigravity
+      changes:
+        - addColumn:
+            tableName: accounts
+            columns:
+              - column:
+                  name: deleted_at
+                  type: timestamp with time zone
+                  constraints:
+                    nullable: true
+      rollback:
+        - dropColumn:
+            tableName: accounts
+            columnName: deleted_at

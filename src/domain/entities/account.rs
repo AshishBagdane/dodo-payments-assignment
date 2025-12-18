@@ -14,6 +14,7 @@ pub struct Account {
     pub balance: Money,
     pub created_at: DateTime<Utc>,
     pub updated_at: DateTime<Utc>,
+    pub deleted_at: Option<DateTime<Utc>>,
 }
 
 impl Account {
@@ -28,6 +29,7 @@ impl Account {
             balance: initial_balance,
             created_at: Utc::now(),
             updated_at: Utc::now(),
+            deleted_at: None,
         })
     }
 
@@ -38,6 +40,7 @@ impl Account {
         balance: Decimal,
         created_at: DateTime<Utc>,
         updated_at: DateTime<Utc>,
+        deleted_at: Option<DateTime<Utc>>,
     ) -> Result<Self, DomainError> {
         Ok(Self {
             id,
@@ -45,6 +48,7 @@ impl Account {
             balance: Money::new(balance)?,
             created_at,
             updated_at,
+            deleted_at,
         })
     }
 
@@ -251,6 +255,7 @@ mod tests {
             dec!(100.00),
             created_at,
             updated_at,
+            None,
         )
             .unwrap();
 

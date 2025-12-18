@@ -4,6 +4,8 @@ databaseChangeLog:
   - include:
       file: changelog/2025.1.0/accounts/001-create-table.yaml
   - include:
+      file: changelog/2025.1.0/accounts/002-add-soft-delete-to-accounts.yaml
+  - include:
       file: changelog/2025.1.0/transactions/001-create-table.yaml
   - include:
       file: changelog/2025.1.0/api_keys/001-create-table.yaml
