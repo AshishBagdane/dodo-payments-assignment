@@ -1,18 +1,8 @@
 use async_trait::async_trait;
 use uuid::Uuid;
 
+use crate::domain::entities::ApiKey;
 use crate::domain::errors::RepositoryError;
-
-/// API Key data structure
-#[derive(Debug, Clone)]
-pub struct ApiKey {
-    pub id: Uuid,
-    pub key_hash: String,
-    pub account_id: Uuid,
-    pub rate_limit_per_hour: u32,
-    pub created_at: chrono::DateTime<chrono::Utc>,
-    pub last_used_at: Option<chrono::DateTime<chrono::Utc>>,
-}
 
 /// Repository trait for API Key persistence operations
 #[async_trait]
