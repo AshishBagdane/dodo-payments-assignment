@@ -1,1 +1,1 @@
-// Middleware will be defined here
+pub mod auth;
