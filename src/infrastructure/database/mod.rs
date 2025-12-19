@@ -6,10 +6,12 @@ use crate::infrastructure::config::Config;
 pub mod postgres_account_repository;
 pub mod postgres_transaction_repository;
 pub mod postgres_api_key_repository;
+pub mod postgres_webhook_repository;
 
 pub use postgres_account_repository::PostgresAccountRepository;
 pub use postgres_transaction_repository::PostgresTransactionRepository;
 pub use postgres_api_key_repository::PostgresApiKeyRepository;
+pub use postgres_webhook_repository::PostgresWebhookRepository;
 
 /// Create a PostgreSQL connection pool
 pub async fn create_pool(config: &Config) -> Result<PgPool, sqlx::Error> {
@@ -45,7 +47,7 @@ mod tests {
             webhook: WebhookConfig {
                 timeout_seconds: 30,
                 max_retries: 5,
-                retry_backoff_seconds: 60,
+                initial_backoff_ms: 1000,
             },
             logging: LoggingConfig {
                 level: "info".to_string(),

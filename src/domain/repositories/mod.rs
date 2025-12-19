@@ -6,6 +6,4 @@ mod webhook_repository;
 pub use account_repository::AccountRepository;
 pub use api_key_repository::ApiKeyRepository;
 pub use transaction_repository::TransactionRepository;
-pub use webhook_repository::{
-    DeliveryStatus, Webhook, WebhookDelivery, WebhookEvent, WebhookRepository,
-};
+pub use webhook_repository::WebhookRepository;
