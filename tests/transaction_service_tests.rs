@@ -96,11 +96,11 @@ impl TransactionRepository for MockTransactionRepository {
 #[tokio::test]
 async fn test_deposit() {
     let mock_repo = Arc::new(MockTransactionRepository::new());
-    let service = TransactionService::new(mock_repo);
+    let service = TransactionService::new(mock_repo, None);
     let account_id = Uuid::new_v4();
     let amount = dec!(100.00);
 
-    let request = DepositRequest { account_id, amount };
+    let request = DepositRequest { account_id, amount, idempotency_key: None };
     let response = service.deposit(request).await.expect("Deposit failed");
 
     assert_eq!(response.to_account_id, Some(account_id));
@@ -111,11 +111,11 @@ async fn test_deposit() {
 #[tokio::test]
 async fn test_withdraw() {
     let mock_repo = Arc::new(MockTransactionRepository::new());
-    let service = TransactionService::new(mock_repo);
+    let service = TransactionService::new(mock_repo, None);
     let account_id = Uuid::new_v4();
     let amount = dec!(50.00);
 
-    let request = WithdrawRequest { account_id, amount };
+    let request = WithdrawRequest { account_id, amount, idempotency_key: None };
     let response = service.withdraw(request).await.expect("Withdraw failed");
 
     assert_eq!(response.from_account_id, Some(account_id));
@@ -126,12 +126,12 @@ async fn test_withdraw() {
 #[tokio::test]
 async fn test_transfer() {
     let mock_repo = Arc::new(MockTransactionRepository::new());
-    let service = TransactionService::new(mock_repo);
+    let service = TransactionService::new(mock_repo, None);
     let from_id = Uuid::new_v4();
     let to_id = Uuid::new_v4();
     let amount = dec!(25.00);
 
-    let request = TransferRequest { from_account_id: from_id, to_account_id: to_id, amount };
+    let request = TransferRequest { from_account_id: from_id, to_account_id: to_id, amount, idempotency_key: None };
     let response = service.transfer(request).await.expect("Transfer failed");
 
     assert_eq!(response.from_account_id, Some(from_id));
@@ -142,12 +142,12 @@ async fn test_transfer() {
 #[tokio::test]
 async fn test_get_history() {
     let mock_repo = Arc::new(MockTransactionRepository::new());
-    let service = TransactionService::new(mock_repo.clone());
+    let service = TransactionService::new(mock_repo.clone(), None);
     let account_id = Uuid::new_v4();
     
     // Seed some transactions (using deposit helper for mock simplicity)
-    service.deposit(DepositRequest { account_id, amount: dec!(100.00) }).await.unwrap();
-    service.withdraw(WithdrawRequest { account_id, amount: dec!(20.00) }).await.unwrap();
+    service.deposit(DepositRequest { account_id, amount: dec!(100.00), idempotency_key: None }).await.unwrap();
+    service.withdraw(WithdrawRequest { account_id, amount: dec!(20.00), idempotency_key: None }).await.unwrap();
 
     let history = service.get_history(account_id, 10, 0).await.expect("Failed to get history");
     
