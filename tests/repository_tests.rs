@@ -4,7 +4,6 @@ use dodo_payments_assignment::domain::value_objects::Money;
 use dodo_payments_assignment::infrastructure::config::Config;
 use dodo_payments_assignment::infrastructure::database::{create_pool, PostgresAccountRepository};
 use rust_decimal_macros::dec;
-use uuid::Uuid;
 
 #[tokio::test]
 async fn test_account_repository_crud() {

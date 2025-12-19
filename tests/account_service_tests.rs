@@ -68,7 +68,7 @@ async fn test_create_account() {
     let service = AccountService::new(mock_repo);
 
     let request = CreateAccountRequest {
-        name: "Test Corp".to_string(),
+        business_name: "Test Corp".to_string(),
     };
 
     let response = service.create_account(request).await.expect("Failed to create account");
@@ -83,7 +83,7 @@ async fn test_get_account() {
     let service = AccountService::new(mock_repo.clone());
 
     let request = CreateAccountRequest {
-        name: "Test Corp".to_string(),
+        business_name: "Test Corp".to_string(),
     };
     let created = service.create_account(request).await.expect("Failed to create account");
 

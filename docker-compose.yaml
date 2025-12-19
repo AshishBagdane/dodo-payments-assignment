@@ -50,6 +50,8 @@ services:
         condition: service_completed_successfully
     env_file:
       - .env
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/dodo-payments
     ports:
       - "8080:8080"
     networks:

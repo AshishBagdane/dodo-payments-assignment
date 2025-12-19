@@ -20,7 +20,7 @@ fn create_test_config() -> Config {
         webhook: WebhookConfig {
             timeout_seconds: 30,
             max_retries: 5,
-            retry_backoff_seconds: 60,
+            initial_backoff_ms: 1000,
         },
         logging: LoggingConfig {
             level: "info".to_string(),

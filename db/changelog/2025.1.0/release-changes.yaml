@@ -6,11 +6,13 @@ databaseChangeLog:
   - include:
       file: changelog/2025.1.0/accounts/002-alter-table-add-column.yaml
   - include:
+      file: changelog/2025.1.0/accounts/003-add-webhook-secret-to-accounts.yaml
+  - include:
       file: changelog/2025.1.0/transactions/001-create-table.yaml
   - include:
-      file: changelog/2025.1.0/api_keys/001-create-table.yaml
+      file: changelog/2025.1.0/webhooks/001-create-webhooks-table.yaml
   - include:
-      file: changelog/2025.1.0/webhooks/001-create-table.yaml
+      file: changelog/2025.1.0/api_keys/001-create-table.yaml
   - include:
       file: changelog/2025.1.0/webhook_deliveries/001-create-table.yaml
   - include:
