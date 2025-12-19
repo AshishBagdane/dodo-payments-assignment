@@ -7,7 +7,6 @@ use axum::{
 use axum::http::HeaderMap;
 
 use crate::application::AppState;
-use crate::application::services::AuthPrincipal;
 
 pub async fn require_auth(
     State(state): State<AppState>,
