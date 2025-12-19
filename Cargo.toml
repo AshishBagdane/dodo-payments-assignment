@@ -45,7 +45,7 @@ anyhow = "1.0"
 async-trait = "0.1.85"
 config = "0.15.6"
 rand = { version = "0.9.2", features = ["std", "std_rng"] }
-governor = "0.6"
+governor = "0.8.0"
 dashmap = "6.0"
 
 [dev-dependencies]
