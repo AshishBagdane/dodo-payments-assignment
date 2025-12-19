@@ -38,7 +38,7 @@ pub struct RateLimitConfig {
 pub struct WebhookConfig {
     pub timeout_seconds: u64,
     pub max_retries: u32,
-    pub retry_backoff_seconds: u64,
+    pub initial_backoff_ms: u64,
 }
 
 #[allow(dead_code)]
@@ -89,13 +89,13 @@ impl Config {
                 .parse()
                 .map_err(|_| ConfigError::InvalidValue("WEBHOOK_TIMEOUT_SECONDS"))?,
             max_retries: env::var("WEBHOOK_MAX_RETRIES")
-                .unwrap_or_else(|_| "5".to_string())
+                .unwrap_or_else(|_| "3".to_string())
                 .parse()
                 .map_err(|_| ConfigError::InvalidValue("WEBHOOK_MAX_RETRIES"))?,
-            retry_backoff_seconds: env::var("WEBHOOK_RETRY_BACKOFF_SECONDS")
-                .unwrap_or_else(|_| "60".to_string())
+            initial_backoff_ms: env::var("WEBHOOK_INITIAL_BACKOFF_MS")
+                .unwrap_or_else(|_| "500".to_string())
                 .parse()
-                .map_err(|_| ConfigError::InvalidValue("WEBHOOK_RETRY_BACKOFF_SECONDS"))?,
+                .map_err(|_| ConfigError::InvalidValue("WEBHOOK_INITIAL_BACKOFF_MS"))?,
         };
 
         let logging = LoggingConfig {
@@ -176,13 +176,13 @@ mod tests {
                 .parse()
                 .map_err(|_| ConfigError::InvalidValue("WEBHOOK_TIMEOUT_SECONDS"))?,
             max_retries: env::var("WEBHOOK_MAX_RETRIES")
-                .unwrap_or_else(|_| "5".to_string())
+                .unwrap_or_else(|_| "3".to_string())
                 .parse()
                 .map_err(|_| ConfigError::InvalidValue("WEBHOOK_MAX_RETRIES"))?,
-            retry_backoff_seconds: env::var("WEBHOOK_RETRY_BACKOFF_SECONDS")
-                .unwrap_or_else(|_| "60".to_string())
+            initial_backoff_ms: env::var("WEBHOOK_INITIAL_BACKOFF_MS")
+                .unwrap_or_else(|_| "500".to_string())
                 .parse()
-                .map_err(|_| ConfigError::InvalidValue("WEBHOOK_RETRY_BACKOFF_SECONDS"))?,
+                .map_err(|_| ConfigError::InvalidValue("WEBHOOK_INITIAL_BACKOFF_MS"))?,
         };
 
         let logging = LoggingConfig {
@@ -212,7 +212,7 @@ mod tests {
 
         assert_eq!(config.server.port, 8080);
         assert_eq!(config.rate_limiting.requests_per_hour, 1000);
-        assert_eq!(config.webhook.max_retries, 5);
+        assert_eq!(config.webhook.max_retries, 3);
 
         unsafe {
             env::remove_var("DATABASE_URL");

@@ -15,6 +15,7 @@ pub struct Account {
     pub created_at: DateTime<Utc>,
     pub updated_at: DateTime<Utc>,
     pub deleted_at: Option<DateTime<Utc>>,
+    pub webhook_secret: String,
 }
 
 impl Account {
@@ -30,6 +31,7 @@ impl Account {
             created_at: Utc::now(),
             updated_at: Utc::now(),
             deleted_at: None,
+            webhook_secret: Uuid::new_v4().simple().to_string(),
         })
     }
 
@@ -41,6 +43,7 @@ impl Account {
         created_at: DateTime<Utc>,
         updated_at: DateTime<Utc>,
         deleted_at: Option<DateTime<Utc>>,
+        webhook_secret: String,
     ) -> Result<Self, DomainError> {
         Ok(Self {
             id,
@@ -49,6 +52,7 @@ impl Account {
             created_at,
             updated_at,
             deleted_at,
+            webhook_secret,
         })
     }
 
@@ -256,6 +260,7 @@ mod tests {
             created_at,
             updated_at,
             None,
+            "secret".to_string(),
         )
             .unwrap();
 

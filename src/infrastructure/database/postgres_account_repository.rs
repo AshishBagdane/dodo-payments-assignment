@@ -24,9 +24,9 @@ impl AccountRepository for PostgresAccountRepository {
     async fn create(&self, account: &Account) -> Result<Account, RepositoryError> {
         let row = sqlx::query(
             r#"
-            INSERT INTO accounts (id, business_name, balance, created_at, updated_at, deleted_at)
-            VALUES ($1, $2, $3, $4, $5, $6)
-            RETURNING id, business_name, balance, created_at, updated_at, deleted_at
+            INSERT INTO accounts (id, business_name, balance, created_at, updated_at, deleted_at, webhook_secret)
+            VALUES ($1, $2, $3, $4, $5, $6, $7)
+            RETURNING id, business_name, balance, created_at, updated_at, deleted_at, webhook_secret
             "#,
         )
         .bind(account.id)
@@ -35,6 +35,7 @@ impl AccountRepository for PostgresAccountRepository {
         .bind(account.created_at)
         .bind(account.updated_at)
         .bind(account.deleted_at)
+        .bind(&account.webhook_secret)
         .map(|row: sqlx::postgres::PgRow| {
             use sqlx::Row;
             Account::from_db(
@@ -44,6 +45,7 @@ impl AccountRepository for PostgresAccountRepository {
                 row.get("created_at"),
                 row.get("updated_at"),
                 row.get("deleted_at"),
+                row.get("webhook_secret"),
             )
         })
         .fetch_one(&self.pool)
@@ -56,7 +58,7 @@ impl AccountRepository for PostgresAccountRepository {
     async fn find_by_id(&self, id: Uuid) -> Result<Account, RepositoryError> {
         let row = sqlx::query(
             r#"
-            SELECT id, business_name, balance, created_at, updated_at, deleted_at 
+            SELECT id, business_name, balance, created_at, updated_at, deleted_at, webhook_secret 
             FROM accounts 
             WHERE id = $1 AND deleted_at IS NULL
             "#,
@@ -71,6 +73,7 @@ impl AccountRepository for PostgresAccountRepository {
                 row.get("created_at"),
                 row.get("updated_at"),
                 row.get("deleted_at"),
+                row.get("webhook_secret"),
             )
         })
         .fetch_optional(&self.pool)
@@ -149,7 +152,7 @@ impl AccountRepository for PostgresAccountRepository {
     async fn list(&self, limit: i64, offset: i64) -> Result<Vec<Account>, RepositoryError> {
         let rows = sqlx::query(
             r#"
-            SELECT id, business_name, balance, created_at, updated_at, deleted_at 
+            SELECT id, business_name, balance, created_at, updated_at, deleted_at, webhook_secret 
             FROM accounts 
             WHERE deleted_at IS NULL
             ORDER BY created_at DESC
@@ -167,6 +170,7 @@ impl AccountRepository for PostgresAccountRepository {
                 row.get("created_at"),
                 row.get("updated_at"),
                 row.get("deleted_at"),
+                row.get("webhook_secret"),
             )
         })
         .fetch_all(&self.pool)
