@@ -99,13 +99,39 @@ curl -X POST http://localhost:8080/transactions/deposit \
   }'
 ```
 
+### 5. Webhooks (New)
+Webhooks allow you to receive real-time notifications when monetary transactions occur.
+```bash
+# Register a webhook
+curl -X POST http://localhost:8080/webhooks/register \
+  -H "x-api-key: my_secret_key" \
+  -H "Content-Type: application/json" \
+  -d '{"url": "http://localhost:9000/hook", "event": "transaction.completed"}'
+```
+
+## Resilience & Security Features (Day 3 Implementation)
+
+### 🔒 Webhook Security
+- **HMAC Signatures:** All webhook payloads are signed with `HMAC-SHA256`. Use the `x-webhook-signature` header to verify the payload using your account's webhook secret.
+- **Retry Logic:** Failed webhook deliveries are retried with exponential backoff (up to 3 times).
+
+### 🛡️ Idempotency
+Prevents double-charging if a network failure occurs during a request.
+- Client sends `idempotency_key` in the request body.
+- If the server receives the same key again, it returns the *original* successful response without re-processing the money.
+
+### 🚦 Rate Limiting
+- Protected endpoints are rate-limited per IP address to prevent abuse.
+- Returns `429 Too Many Requests` if the limit is exceeded.
+
 ## Design Decisions
 
 - **Why UUIDs?** They are safer for distributed systems and prevent ID enumeration attacks compared to sequential integers.
 - **Why no ORM?** I prefer `SQLx` because it gives me compile-time verification of my SQL queries. If I typo a column name, the code won't compile. It's magical. 
 - **Soft Deletes:** Deleting financial data is scary. I used a `deleted_at` column so we can essentially "archive" accounts without losing history.
+- **Async Dispatch:** Webhooks are dispatched in background tasks to keep the API response time low.
 
 ## What's Next?
-Day 3 is all about **Webhooks**. I plan to implement a dispatcher that notifies external URLs when transactions complete, complete with HMAC signatures so clients can trust the events came from us.
+Day 4 will focus on comprehensive **Integration Testing** and generating formal API documentation.
 
 Enjoy reviewing! Let me know if you have any questions. 🚀
