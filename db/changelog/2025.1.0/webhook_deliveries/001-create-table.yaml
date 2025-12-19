@@ -41,7 +41,7 @@ databaseChangeLog:
                     deleteCascade: true
               - column:
                   name: event_type
-                  type: webhook_event
+                  type: varchar(100)
                   constraints:
                     nullable: false
               - column:
