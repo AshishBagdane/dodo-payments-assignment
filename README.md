@@ -17,6 +17,7 @@ This isn't just a CRUD app; I wanted to build something that feels production-re
 - **Database:** PostgreSQL 16 (accessed via SQLx)
 - **Migrations:** Liquibase
 - **Runtime:** Tokio
+- **Documentation:** OpenAPI (via `utoipa`)
 
 ## Getting Started
 
@@ -136,7 +137,23 @@ Prevents double-charging if a network failure occurs during a request.
 I've written up some detailed docs if you want to dive deeper:
 
 - **[DESIGN.md](DESIGN.md):** The "Why" behind the code. Architecture, safety, and trade-offs.
-- **[API.md](API.md):** The "How". Endpoint usage, curl snippets, and webhook verification.
+- **[DESIGN.md](DESIGN.md):** The "Why" behind the code. Architecture, safety, and trade-offs.
+- **Swagger UI:** Interactive API documentation available at `http://localhost:8080/swagger-ui/` when running the app.
+
+## Build & Offline Mode
+
+This project uses `sqlx` for compile-time query verification. To enable building without a running database (e.g., in CI or Docker), we use `SQLX_OFFLINE=true`.
+
+- **To update the query cache:**
+  ```bash
+  # Ensure DB is running
+  make up
+  cargo sqlx prepare -- --lib
+  # Commit the .sqlx/ directory
+  ```
+
+- ** To build offline:**
+  Ensure `SQLX_OFFLINE=true` is set in your environment (already set in `.env` and `Dockerfile`).
 
 ## Conclusion
 
