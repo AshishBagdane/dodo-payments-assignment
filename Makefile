@@ -58,7 +58,7 @@ clippy: ## Run clippy linter
 	cargo clippy -- -D warnings
 
 sqlx-prepare: ## Prepare SQLx for offline compilation
-	cargo sqlx prepare -- --lib
+	cargo sqlx prepare -- --lib --tests
 
 sqlx-check: ## Verify SQLx queries without database
 	cargo sqlx prepare --check -- --lib
