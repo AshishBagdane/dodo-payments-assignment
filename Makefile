@@ -10,6 +10,10 @@ build: ## Build the application
 	cargo build --release
 
 up: ## Start all services with docker-compose
+	@if [ ! -f .env ]; then \
+		echo "Creating .env from .env.example"; \
+		cp .env.example .env; \
+	fi
 	docker-compose up -d
 
 down: ## Stop all services
