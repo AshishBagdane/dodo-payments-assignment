@@ -60,7 +60,7 @@ async fn setup_app_and_key() -> (Router, String, Uuid) {
 
     let protected_routes = Router::new()
         .route("/webhooks", axum::routing::post(create_webhook).get(list_webhooks))
-        .route("/webhooks/{id}", axum::routing::delete(delete_webhook))
+        .route("/webhooks/:id", axum::routing::delete(delete_webhook))
         .route_layer(axum::middleware::from_fn_with_state(
             state.clone(),
             require_auth,

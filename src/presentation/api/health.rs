@@ -8,6 +8,14 @@ use serde_json::json;
 
 use crate::application::AppState;
 
+#[utoipa::path(
+    get,
+    path = "/health",
+    responses(
+        (status = 200, description = "Service is healthy"),
+        (status = 503, description = "Service unavailable")
+    )
+)]
 pub async fn health_check(
     State(state): State<AppState>,
 ) -> impl IntoResponse {

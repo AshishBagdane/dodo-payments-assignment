@@ -4,6 +4,7 @@ mod infrastructure;
 mod presentation;
 
 use axum::{routing::get, Router};
+use utoipa::OpenApi;
 use std::net::SocketAddr;
 use std::sync::Arc;
 use tokio::net::TcpListener;
@@ -78,13 +79,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         config.rate_limiting.requests_per_hour,
     );
 
-    // Build Router
-    let app = Router::new()
-        // Public Endpoints
-        .route("/health", get(presentation::api::health::health_check))
-        .route("/accounts", axum::routing::post(presentation::api::account::create_account))
-        .route("/webhooks/register", axum::routing::post(presentation::api::webhook::create_webhook))
-        // Protected Endpoints (Authed + Rate Limited)
+    // Build API Router
+    let protected_routes = Router::new()
         .nest("/transactions", Router::new()
             .route("/deposit", axum::routing::post(presentation::api::transaction::deposit))
             .route("/withdraw", axum::routing::post(presentation::api::transaction::withdraw))
@@ -93,13 +89,25 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         )
         .route("/accounts/:id", get(presentation::api::account::get_account))
         .route("/accounts", get(presentation::api::account::list_accounts))
-        .route("/webhooks/:account_id", get(presentation::api::webhook::list_webhooks))
+        .route("/webhooks", axum::routing::get(presentation::api::webhook::list_webhooks))
         .route("/webhooks/:id", axum::routing::delete(presentation::api::webhook::delete_webhook))
-        // Apply Middleware
+        .route("/webhooks", axum::routing::post(presentation::api::webhook::create_webhook))
+        .layer(axum::middleware::from_fn_with_state(app_state.clone(), crate::presentation::middleware::auth::require_auth));
+
+    let api_router = Router::new()
+        // Public Endpoints
+        .route("/health", get(presentation::api::health::health_check))
+        .route("/accounts", axum::routing::post(presentation::api::account::create_account))
+        // Protected Endpoints
+        .merge(protected_routes)
+        // Apply Global Middleware
         .layer(tower_http::trace::TraceLayer::new_for_http())
-        .layer(axum::middleware::from_fn_with_state(app_state.clone(), crate::presentation::middleware::auth::require_auth))
         .layer(axum::middleware::from_fn_with_state(rate_limit_layer, crate::presentation::middleware::rate_limit::RateLimitLayer::handle))
-        .with_state(app_state)
+        .with_state(app_state);
+
+    let app = Router::new()
+        .merge(utoipa_swagger_ui::SwaggerUi::new("/swagger-ui").url("/api-docs/openapi.json", crate::presentation::api::openapi::ApiDoc::openapi()))
+        .merge(api_router)
         .into_make_service_with_connect_info::<SocketAddr>(); // Important for rate limiting
 
     // Start Server

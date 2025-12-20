@@ -1,15 +1,16 @@
-use crate::domain::entities::Account;
+use utoipa::ToSchema;
 use chrono::{DateTime, Utc};
 use rust_decimal::Decimal;
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
+use crate::domain::entities::Account;
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, ToSchema)]
 pub struct CreateAccountRequest {
     pub business_name: String,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, ToSchema)]
 pub struct AccountResponse {
     pub id: Uuid,
     pub business_name: String,

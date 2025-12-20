@@ -32,7 +32,13 @@ When a payment processing finishes, we can't block the API response while notify
 *   **Security**: To prove the webhook came from us, I sign every payload using **HMAC-SHA256**. The signature is sent in the `X-Dodo-Signature` header.
 *   **Retries**: If the user's server flakiness, I implemented a jittered exponential backoff retry mechanism.
 
-### 4. Production-Ready Controls
+### 4. API Documentation (OpenAPI)
+I integrated `utoipa` to generate code-first Swagger documentation.
+*   **Interactive UI**: Available at `http://localhost:8080/swagger-ui/`.
+*   **Spec**: `http://localhost:8080/api-docs/openapi.json`.
+*   **Security**: Authentication is integrated into the UI.
+
+### 5. Production-Ready Controls
 *   **Rate Limiting**: Used `governor` to implement an IP-based token bucket. No single IP can flood our service.
 *   **Authentication**: Custom middleware validates API keys (hashed in DB) before allowing access to sensitive routes.
 *   **Observability**: Hooked up `tracing` for structured logs. You can see exactly what's happening in every request.

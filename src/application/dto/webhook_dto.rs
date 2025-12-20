@@ -1,17 +1,17 @@
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
+use utoipa::ToSchema;
 use uuid::Uuid;
-
 use crate::domain::entities::Webhook;
 use crate::domain::value_objects::WebhookEvent;
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, ToSchema)]
 pub struct CreateWebhookRequest {
     pub url: String,
     pub event: WebhookEvent,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, ToSchema)]
 pub struct WebhookResponse {
     pub id: Uuid,
     pub url: String,

@@ -12,7 +12,21 @@ use crate::domain::entities::Webhook;
 use crate::domain::repositories::WebhookRepository;
 use crate::domain::errors::{ApiError, ServiceError};
 use crate::application::services::AuthPrincipal;
+use crate::presentation::api::error::ErrorResponse;
 
+#[utoipa::path(
+    post,
+    path = "/webhooks",
+    request_body = CreateWebhookRequest,
+    security(
+        ("api_key" = [])
+    ),
+    responses(
+        (status = 201, description = "Webhook created", body = WebhookResponse),
+        (status = 400, description = "Bad request", body = ErrorResponse),
+        (status = 401, description = "Unauthorized", body = ErrorResponse)
+    )
+)]
 pub async fn create_webhook(
     State(state): State<AppState>,
     Extension(_auth): Extension<AuthPrincipal>,
@@ -31,6 +45,17 @@ pub async fn create_webhook(
     Ok((StatusCode::CREATED, Json(WebhookResponse::from(created_webhook))))
 }
 
+#[utoipa::path(
+    get,
+    path = "/webhooks",
+    security(
+        ("api_key" = [])
+    ),
+    responses(
+        (status = 200, description = "List of webhooks", body = [WebhookResponse]),
+        (status = 401, description = "Unauthorized", body = ErrorResponse)
+    )
+)]
 pub async fn list_webhooks(
     State(state): State<AppState>,
     Extension(_auth): Extension<AuthPrincipal>,
@@ -47,6 +72,20 @@ pub async fn list_webhooks(
     Ok((StatusCode::OK, Json(response)))
 }
 
+#[utoipa::path(
+    delete,
+    path = "/webhooks/{id}",
+    params(
+        ("id" = Uuid, Path, description = "Webhook ID")
+    ),
+    security(
+        ("api_key" = [])
+    ),
+    responses(
+        (status = 204, description = "Webhook deleted"),
+        (status = 401, description = "Unauthorized", body = ErrorResponse)
+    )
+)]
 pub async fn delete_webhook(
     State(state): State<AppState>,
     Extension(_auth): Extension<AuthPrincipal>,

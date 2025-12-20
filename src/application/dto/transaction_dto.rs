@@ -1,25 +1,25 @@
 use chrono::{DateTime, Utc};
 use rust_decimal::Decimal;
 use serde::{Deserialize, Serialize};
+use utoipa::ToSchema;
 use uuid::Uuid;
-
 use crate::domain::entities::Transaction;
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, ToSchema)]
 pub struct DepositRequest {
     pub account_id: Uuid,
     pub amount: Decimal,
     pub idempotency_key: Option<String>,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, ToSchema)]
 pub struct WithdrawRequest {
     pub account_id: Uuid,
     pub amount: Decimal,
     pub idempotency_key: Option<String>,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, ToSchema)]
 pub struct TransferRequest {
     pub from_account_id: Uuid,
     pub to_account_id: Uuid,
@@ -27,7 +27,7 @@ pub struct TransferRequest {
     pub idempotency_key: Option<String>,
 }
 
-#[derive(Debug, Deserialize, Serialize, Clone)]
+#[derive(Debug, Deserialize, Serialize, Clone, ToSchema)]
 pub struct TransactionResponse {
     pub id: Uuid,
     pub transaction_type: String,
