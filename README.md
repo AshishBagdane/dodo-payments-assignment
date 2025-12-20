@@ -27,13 +27,19 @@ You'll need `docker`, `docker-compose`, and `cargo` installed.
 ### Running it
 I've wrapped the common commands in a `Makefile` to save some typing:
 
-1. **Spin up the infrastructure:**
+1. **Configure the environment:**
+   ```bash
+   cp .env.example .env
+   # The default settings work out-of-the-box for Docker
+   ```
+
+2. **Spin up the infrastructure:**
    ```bash
    make up
    # This starts Postgres, runs migrations, and starts the app container.
    ```
 
-2. **Run locally (for development):**
+3. **Run locally (for development):**
    If you prefer running the Rust binary on your host machine while keeping the DB in Docker:
    ```bash
    make dev
@@ -42,7 +48,7 @@ I've wrapped the common commands in a `Makefile` to save some typing:
    cargo run
    ```
 
-3. **Run Tests:**
+4. **Run Tests:**
    ```bash
    make test
    ```
