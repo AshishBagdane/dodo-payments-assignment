@@ -41,7 +41,7 @@ impl TransactionRepository for PostgresTransactionRepository {
         .map(|row: sqlx::postgres::PgRow| {
             use sqlx::Row;
             let type_str: String = row.get("transaction_type");
-            let transaction_type = TransactionType::from_str(&type_str)?;
+            let transaction_type = type_str.parse::<TransactionType>()?;
             let amount_decimal: rust_decimal::Decimal = row.get("amount");
             let amount = crate::domain::value_objects::Money::new(amount_decimal)?;
 
@@ -84,7 +84,7 @@ impl TransactionRepository for PostgresTransactionRepository {
         .map(|row: sqlx::postgres::PgRow| {
             use sqlx::Row;
             let type_str: String = row.get("transaction_type");
-            let transaction_type = TransactionType::from_str(&type_str)?;
+            let transaction_type = type_str.parse::<TransactionType>()?;
             let amount_decimal: rust_decimal::Decimal = row.get("amount");
             let amount = crate::domain::value_objects::Money::new(amount_decimal)?;
 
@@ -121,7 +121,7 @@ impl TransactionRepository for PostgresTransactionRepository {
         .map(|row: sqlx::postgres::PgRow| {
             use sqlx::Row;
             let type_str: String = row.get("transaction_type");
-            let transaction_type = TransactionType::from_str(&type_str)?;
+            let transaction_type = type_str.parse::<TransactionType>()?;
             let amount_decimal: rust_decimal::Decimal = row.get("amount");
             let amount = crate::domain::value_objects::Money::new(amount_decimal)?;
 
@@ -183,7 +183,7 @@ impl TransactionRepository for PostgresTransactionRepository {
         .map(|row: sqlx::postgres::PgRow| {
             use sqlx::Row;
             let type_str: String = row.get("transaction_type");
-            let transaction_type = TransactionType::from_str(&type_str)?;
+            let transaction_type = type_str.parse::<TransactionType>()?;
             let amount_decimal: rust_decimal::Decimal = row.get("amount");
             let amount = crate::domain::value_objects::Money::new(amount_decimal)?;
 
@@ -230,7 +230,7 @@ impl TransactionRepository for PostgresTransactionRepository {
         .map(|row: sqlx::postgres::PgRow| {
             use sqlx::Row;
             let type_str: String = row.get("transaction_type");
-            let transaction_type = TransactionType::from_str(&type_str)?;
+            let transaction_type = type_str.parse::<TransactionType>()?;
             let amount_decimal: rust_decimal::Decimal = row.get("amount");
             let amount = crate::domain::value_objects::Money::new(amount_decimal)?;
 
@@ -270,7 +270,7 @@ impl TransactionRepository for PostgresTransactionRepository {
         .map(|row: sqlx::postgres::PgRow| {
             use sqlx::Row;
             let type_str: String = row.get("transaction_type");
-            let transaction_type = TransactionType::from_str(&type_str)?;
+            let transaction_type = type_str.parse::<TransactionType>()?;
             let amount_decimal: rust_decimal::Decimal = row.get("amount");
             let amount = crate::domain::value_objects::Money::new(amount_decimal)?;
 
@@ -343,7 +343,7 @@ impl TransactionRepository for PostgresTransactionRepository {
         .map(|row: sqlx::postgres::PgRow| {
             use sqlx::Row;
             let type_str: String = row.get("transaction_type");
-            let transaction_type = TransactionType::from_str(&type_str)?;
+            let transaction_type = type_str.parse::<TransactionType>()?;
             let amount_decimal: rust_decimal::Decimal = row.get("amount");
             let amount = crate::domain::value_objects::Money::new(amount_decimal)?;
 
@@ -442,7 +442,7 @@ impl TransactionRepository for PostgresTransactionRepository {
         .map(|row: sqlx::postgres::PgRow| {
              use sqlx::Row;
             let type_str: String = row.get("transaction_type");
-            let transaction_type = TransactionType::from_str(&type_str)?;
+            let transaction_type = type_str.parse::<TransactionType>()?;
             let amount_decimal: rust_decimal::Decimal = row.get("amount");
             let amount = crate::domain::value_objects::Money::new(amount_decimal)?;
 
@@ -579,7 +579,7 @@ impl TransactionRepository for PostgresTransactionRepository {
         .map(|row: sqlx::postgres::PgRow| {
              use sqlx::Row;
             let type_str: String = row.get("transaction_type");
-            let transaction_type = TransactionType::from_str(&type_str)?;
+            let transaction_type = type_str.parse::<TransactionType>()?;
             let amount_decimal: rust_decimal::Decimal = row.get("amount");
             let amount = crate::domain::value_objects::Money::new(amount_decimal)?;
 

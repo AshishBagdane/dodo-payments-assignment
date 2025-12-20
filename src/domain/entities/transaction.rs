@@ -17,6 +17,7 @@ pub struct Transaction {
     pub created_at: DateTime<Utc>,
 }
 
+#[allow(dead_code)]
 impl Transaction {
     /// Create a new credit transaction (money added to account)
     pub fn new_credit(

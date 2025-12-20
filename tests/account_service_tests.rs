@@ -60,6 +60,10 @@ impl AccountRepository for MockAccountRepository {
     async fn delete(&self, _id: Uuid) -> Result<(), RepositoryError> {
         Ok(())
     }
+
+    async fn health_check(&self) -> Result<(), RepositoryError> {
+        Ok(())
+    }
 }
 
 #[tokio::test]

@@ -59,7 +59,7 @@ impl RateLimitLayer {
         }).clone();
 
         // Check if request is allowed
-        if let Err(_) = limiter.check() {
+        if limiter.check().is_err() {
             return Err(StatusCode::TOO_MANY_REQUESTS);
         }
 

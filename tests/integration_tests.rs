@@ -3,7 +3,6 @@ use dodo_payments_assignment::application::dto::transaction_dto::{
     DepositRequest, TransferRequest, WithdrawRequest,
 };
 use dodo_payments_assignment::application::services::account_service::AccountService;
-use dodo_payments_assignment::application::services::auth_service::AuthService;
 use dodo_payments_assignment::application::services::transaction_service::TransactionService;
 use dodo_payments_assignment::application::services::webhook_service::WebhookService;
 use dodo_payments_assignment::domain::services::WebhookDispatcher;
@@ -12,7 +11,6 @@ use dodo_payments_assignment::infrastructure::database::postgres_account_reposit
 use dodo_payments_assignment::infrastructure::database::postgres_api_key_repository::PostgresApiKeyRepository;
 use dodo_payments_assignment::infrastructure::database::postgres_transaction_repository::PostgresTransactionRepository;
 use dodo_payments_assignment::infrastructure::database::postgres_webhook_repository::PostgresWebhookRepository;
-use rust_decimal::Decimal;
 use rust_decimal_macros::dec;
 use serde_json::Value; // Import Value
 use sqlx::postgres::PgPoolOptions;

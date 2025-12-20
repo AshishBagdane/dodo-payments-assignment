@@ -49,4 +49,8 @@ impl AccountService {
             .map_err(ServiceError::from)?;
         Ok(accounts.into_iter().map(AccountResponse::from).collect())
     }
+
+    pub async fn health_check(&self) -> Result<(), ServiceError> {
+        self.repository.health_check().await.map_err(ServiceError::from)
+    }
 }

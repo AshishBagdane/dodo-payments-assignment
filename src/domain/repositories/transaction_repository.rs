@@ -7,6 +7,7 @@ use crate::domain::value_objects::TransactionType;
 
 /// Repository trait for Transaction persistence operations
 #[async_trait]
+#[allow(dead_code)]
 pub trait TransactionRepository: Send + Sync {
     /// Create a new transaction
     /// Returns error if idempotency key already exists

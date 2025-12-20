@@ -31,6 +31,7 @@ FROM debian:bookworm-slim
 RUN apt-get update && apt-get install -y \
     ca-certificates \
     libssl3 \
+    curl \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
@@ -45,5 +46,8 @@ RUN useradd -m -u 1000 appuser && \
 USER appuser
 
 EXPOSE 8080
+
+HEALTHCHECK --interval=30s --timeout=3s \
+  CMD curl -f http://localhost:8080/health || exit 1
 
 CMD ["/app/dodo-payments"]

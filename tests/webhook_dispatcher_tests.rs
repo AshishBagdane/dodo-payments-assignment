@@ -1,14 +1,12 @@
 use std::sync::{Arc, Mutex};
 use async_trait::async_trait;
-use serde::Serialize;
 use serde_json::Value;
 use tokio::sync::Notify;
-use uuid::Uuid;
 
-use dodo_payments_assignment::application::dto::{DepositRequest, TransactionResponse};
+use dodo_payments_assignment::application::dto::DepositRequest;
 use dodo_payments_assignment::application::services::{TransactionService, WebhookService};
 use dodo_payments_assignment::domain::entities::{Account, Webhook};
-use dodo_payments_assignment::domain::repositories::{AccountRepository, TransactionRepository, WebhookRepository};
+use dodo_payments_assignment::domain::repositories::{AccountRepository, WebhookRepository};
 use dodo_payments_assignment::domain::services::WebhookDispatcher;
 use dodo_payments_assignment::domain::value_objects::{Money, WebhookEvent};
 use dodo_payments_assignment::infrastructure::config::Config;

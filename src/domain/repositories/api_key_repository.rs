@@ -6,6 +6,7 @@ use crate::domain::errors::RepositoryError;
 
 /// Repository trait for API Key persistence operations
 #[async_trait]
+#[allow(dead_code)]
 pub trait ApiKeyRepository: Send + Sync {
     /// Create a new API key
     async fn create(&self, api_key: &ApiKey) -> Result<ApiKey, RepositoryError>;

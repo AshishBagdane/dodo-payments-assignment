@@ -9,7 +9,7 @@ use uuid::Uuid;
 
 use crate::application::dto::{DepositRequest, TransferRequest, WithdrawRequest};
 use crate::application::AppState;
-use crate::presentation::api::map_service_error;
+use crate::domain::errors::ApiError;
 
 #[derive(Deserialize)]
 pub struct HistoryQuery {
@@ -32,12 +32,12 @@ fn default_offset() -> i64 {
 pub async fn deposit(
     State(state): State<AppState>,
     Json(payload): Json<DepositRequest>,
-) -> Result<impl IntoResponse, (StatusCode, String)> {
+) -> Result<impl IntoResponse, ApiError> {
     let transaction = state
         .transaction_service
         .deposit(payload)
         .await
-        .map_err(|e| map_service_error(e.into()))?;
+        .map_err(ApiError::from)?;
 
     Ok((StatusCode::OK, Json(transaction)))
 }
@@ -46,12 +46,12 @@ pub async fn deposit(
 pub async fn withdraw(
     State(state): State<AppState>,
     Json(payload): Json<WithdrawRequest>,
-) -> Result<impl IntoResponse, (StatusCode, String)> {
+) -> Result<impl IntoResponse, ApiError> {
     let transaction = state
         .transaction_service
         .withdraw(payload)
         .await
-        .map_err(|e| map_service_error(e.into()))?;
+        .map_err(ApiError::from)?;
 
     Ok((StatusCode::OK, Json(transaction)))
 }
@@ -60,12 +60,12 @@ pub async fn withdraw(
 pub async fn transfer(
     State(state): State<AppState>,
     Json(payload): Json<TransferRequest>,
-) -> Result<impl IntoResponse, (StatusCode, String)> {
+) -> Result<impl IntoResponse, ApiError> {
     let transaction = state
         .transaction_service
         .transfer(payload)
         .await
-        .map_err(|e| map_service_error(e.into()))?;
+        .map_err(ApiError::from)?;
 
     Ok((StatusCode::OK, Json(transaction)))
 }
@@ -74,12 +74,12 @@ pub async fn transfer(
 pub async fn get_history(
     State(state): State<AppState>,
     Query(params): Query<HistoryQuery>,
-) -> Result<impl IntoResponse, (StatusCode, String)> {
+) -> Result<impl IntoResponse, ApiError> {
     let history = state
         .transaction_service
         .get_history(params.account_id, params.limit, params.offset)
         .await
-        .map_err(|e| map_service_error(e.into()))?;
+        .map_err(ApiError::from)?;
 
     Ok((StatusCode::OK, Json(history)))
 }

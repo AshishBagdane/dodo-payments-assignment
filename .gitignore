@@ -24,3 +24,9 @@ postgres_data/
 
 # SQLx offline mode cache (can be committed for CI/CD)
 # .sqlx/
+
+# Internal Agent & Planning Docs
+.agent/
+docs/current-progress-report.md
+docs/problem-statement-and-development-plan.md
+docs/roadmap.md

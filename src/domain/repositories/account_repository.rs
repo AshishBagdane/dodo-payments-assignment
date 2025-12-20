@@ -7,6 +7,7 @@ use crate::domain::value_objects::Money;
 
 /// Repository trait for Account persistence operations
 #[async_trait]
+#[allow(dead_code)]
 pub trait AccountRepository: Send + Sync {
     /// Create a new account
     async fn create(&self, account: &Account) -> Result<Account, RepositoryError>;
@@ -28,4 +29,7 @@ pub trait AccountRepository: Send + Sync {
 
     /// Delete account (soft delete recommended in production)
     async fn delete(&self, id: Uuid) -> Result<(), RepositoryError>;
+
+    /// Check database connectivity
+    async fn health_check(&self) -> Result<(), RepositoryError>;
 }

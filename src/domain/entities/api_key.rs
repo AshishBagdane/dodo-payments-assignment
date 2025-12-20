@@ -14,6 +14,7 @@ pub struct ApiKey {
 
 impl ApiKey {
     /// Create a new API key instance (for domain logic, not persistence)
+    #[allow(dead_code)]
     pub fn new(account_id: Uuid, key_hash: String) -> Self {
         Self {
             id: Uuid::new_v4(),

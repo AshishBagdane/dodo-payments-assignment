@@ -90,7 +90,7 @@ pub enum ServiceError {
     AuthorizationError(String),
 
     #[error("External service error: {0}")]
-    ExternalServiceError(String),
+    ExternalService(String),
 
     #[error("Webhook delivery error: {0}")]
     WebhookDeliveryError(String),
@@ -101,6 +101,7 @@ pub enum ServiceError {
     #[error("Internal error: {0}")]
     InternalError(String),
 }
+
 
 /// API-level errors for HTTP responses
 #[derive(Debug, Error)]
@@ -170,7 +171,7 @@ impl From<ServiceError> for ApiError {
             ServiceError::ConfigurationError(_) => {
                 ApiError::InternalServerError("Service configuration error".to_string())
             }
-            ServiceError::ExternalServiceError(_) => {
+            ServiceError::ExternalService(_) => {
                 ApiError::ServiceUnavailable("External service unavailable".to_string())
             }
             ServiceError::InternalError(_) => {

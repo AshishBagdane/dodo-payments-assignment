@@ -48,9 +48,9 @@ impl ApiKeyRepository for PostgresApiKeyRepository {
         .map_err(|e| {
             if let Some(db_err) = e.as_database_error() {
                 if db_err.is_unique_violation() {
-                    return RepositoryError::DuplicateEntry(format!(
-                        "API key hash already exists"
-                    ));
+                    return RepositoryError::DuplicateEntry(
+                        "API key hash already exists".to_string()
+                    );
                 }
             }
             RepositoryError::from(e)

@@ -17,7 +17,6 @@ use crate::infrastructure::database::{
 };
 use crate::infrastructure::http_client::ReqwestWebhookDispatcher;
 // Imports cleaned up
-use crate::presentation::middleware::auth::require_auth; // Unused
 // Actually, let's clean up unused imports too. `require_auth` is not used anymore.
 
 #[tokio::main]

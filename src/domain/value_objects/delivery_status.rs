@@ -12,13 +12,13 @@ pub enum DeliveryStatus {
     Retrying,
 }
 
-impl ToString for DeliveryStatus {
-    fn to_string(&self) -> String {
+impl std::fmt::Display for DeliveryStatus {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
-            DeliveryStatus::Pending => "pending".to_string(),
-            DeliveryStatus::Success => "success".to_string(),
-            DeliveryStatus::Failed => "failed".to_string(),
-            DeliveryStatus::Retrying => "retrying".to_string(),
+            DeliveryStatus::Pending => write!(f, "pending"),
+            DeliveryStatus::Success => write!(f, "success"),
+            DeliveryStatus::Failed => write!(f, "failed"),
+            DeliveryStatus::Retrying => write!(f, "retrying"),
         }
     }
 }

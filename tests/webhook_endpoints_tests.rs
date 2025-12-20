@@ -6,7 +6,7 @@ use serde_json::json;
 use tower::ServiceExt; 
 use sha2::Digest; 
 
-use dodo_payments_assignment::application::dto::{CreateWebhookRequest, WebhookResponse};
+use dodo_payments_assignment::application::dto::WebhookResponse;
 use dodo_payments_assignment::domain::entities::ApiKey;
 use dodo_payments_assignment::domain::value_objects::{Money, WebhookEvent};
 use rust_decimal_macros::dec; 
@@ -15,16 +15,14 @@ use dodo_payments_assignment::infrastructure::database::{
     create_pool, PostgresAccountRepository, PostgresApiKeyRepository, PostgresTransactionRepository,
     PostgresWebhookRepository,
 };
-use dodo_payments_assignment::domain::repositories::{AccountRepository, ApiKeyRepository, WebhookRepository};
+use dodo_payments_assignment::domain::repositories::{AccountRepository, ApiKeyRepository};
 use dodo_payments_assignment::application::services::{AccountService, AuthService, TransactionService};
 use dodo_payments_assignment::application::AppState;
 use dodo_payments_assignment::presentation::api::{
-    account::create_account,
     webhook::{create_webhook, delete_webhook, list_webhooks},
 };
 use dodo_payments_assignment::presentation::middleware::auth::require_auth;
 use axum::Router;
-use axum::routing::get;
 use std::sync::Arc;
 use uuid::Uuid;
 

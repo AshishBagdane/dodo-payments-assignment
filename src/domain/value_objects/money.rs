@@ -11,20 +11,25 @@ pub struct Money {
     amount: Decimal,
 }
 
-impl Money {
+use std::str::FromStr;
+
+impl FromStr for Money {
+    type Err = DomainError;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        let amount = s
+            .parse::<Decimal>()
+            .map_err(|_| DomainError::InvalidAmount(format!("Invalid amount: {}", s)))?;
+        Self::new(amount)
+    }
+}
+
+ impl Money {
     /// Create a new Money instance
     pub fn new(amount: Decimal) -> Result<Self, DomainError> {
         let money = Self { amount };
         money.validate()?;
         Ok(money)
-    }
-
-    /// Create Money from a string (useful for parsing user input)
-    pub fn from_str(s: &str) -> Result<Self, DomainError> {
-        let amount = s
-            .parse::<Decimal>()
-            .map_err(|_| DomainError::InvalidAmount(format!("Invalid amount: {}", s)))?;
-        Self::new(amount)
     }
 
     /// Get the amount as Decimal
@@ -59,13 +64,13 @@ impl Money {
     }
 
     /// Add two Money values
-    pub fn add(self, other: Money) -> Result<Money, DomainError> {
+    pub fn checked_add(self, other: Money) -> Result<Money, DomainError> {
         let result = self.amount + other.amount;
         Money::new(result)
     }
 
     /// Subtract two Money values
-    pub fn subtract(self, other: Money) -> Result<Money, DomainError> {
+    pub fn checked_sub(self, other: Money) -> Result<Money, DomainError> {
         let result = self.amount - other.amount;
         Money::new(result)
     }
@@ -91,7 +96,7 @@ impl Add for Money {
     type Output = Result<Money, DomainError>;
 
     fn add(self, other: Money) -> Self::Output {
-        self.add(other)
+        self.checked_add(other)
     }
 }
 
@@ -99,7 +104,7 @@ impl Sub for Money {
     type Output = Result<Money, DomainError>;
 
     fn sub(self, other: Money) -> Self::Output {
-        self.subtract(other)
+        self.checked_sub(other)
     }
 }
 
@@ -143,7 +148,7 @@ mod tests {
     fn test_add_money() {
         let money1 = Money::new(dec!(100.00)).unwrap();
         let money2 = Money::new(dec!(50.50)).unwrap();
-        let result = money1.add(money2).unwrap();
+        let result = money1.checked_add(money2).unwrap();
         assert_eq!(result.amount(), dec!(150.50));
     }
 
@@ -151,7 +156,7 @@ mod tests {
     fn test_subtract_money() {
         let money1 = Money::new(dec!(100.00)).unwrap();
         let money2 = Money::new(dec!(50.50)).unwrap();
-        let result = money1.subtract(money2).unwrap();
+        let result = money1.checked_sub(money2).unwrap();
         assert_eq!(result.amount(), dec!(49.50));
     }
 
@@ -159,7 +164,7 @@ mod tests {
     fn test_subtract_resulting_in_negative_fails() {
         let money1 = Money::new(dec!(50.00)).unwrap();
         let money2 = Money::new(dec!(100.00)).unwrap();
-        let result = money1.subtract(money2);
+        let result = money1.checked_sub(money2);
         assert!(result.is_err());
     }
 
@@ -171,13 +176,13 @@ mod tests {
 
     #[test]
     fn test_money_from_string() {
-        let money = Money::from_str("123.45").unwrap();
+        let money = "123.45".parse::<Money>().unwrap();
         assert_eq!(money.amount(), dec!(123.45));
     }
 
     #[test]
     fn test_money_from_invalid_string() {
-        let result = Money::from_str("invalid");
+        let result = "invalid".parse::<Money>();
         assert!(result.is_err());
     }
 

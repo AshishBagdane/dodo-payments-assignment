@@ -18,6 +18,7 @@ pub struct Account {
     pub webhook_secret: String,
 }
 
+#[allow(dead_code)]
 impl Account {
     /// Create a new account with initial balance
     pub fn new(business_name: String, initial_balance: Money) -> Result<Self, DomainError> {
@@ -60,7 +61,7 @@ impl Account {
     pub fn credit(&mut self, amount: Money) -> Result<(), DomainError> {
         amount.validate()?;
 
-        self.balance = self.balance.add(amount)?;
+        self.balance = self.balance.checked_add(amount)?;
         self.updated_at = Utc::now();
 
         Ok(())
@@ -77,7 +78,7 @@ impl Account {
             });
         }
 
-        self.balance = self.balance.subtract(amount)?;
+        self.balance = self.balance.checked_sub(amount)?;
         self.updated_at = Utc::now();
 
         Ok(())

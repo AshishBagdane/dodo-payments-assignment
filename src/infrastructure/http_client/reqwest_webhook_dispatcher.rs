@@ -71,7 +71,7 @@ impl WebhookDispatcher for ReqwestWebhookDispatcher {
             }
 
             // Exponential backoff with jitter
-            let jitter: u64 = rand::thread_rng().gen_range(0..100);
+            let jitter: u64 = rand::rng().random_range(0..100);
             let sleep_duration = Duration::from_millis(backoff + jitter);
             tokio::time::sleep(sleep_duration).await;
             

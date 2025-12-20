@@ -8,11 +8,11 @@ pub enum WebhookEvent {
     AccountCreated,
 }
 
-impl ToString for WebhookEvent {
-    fn to_string(&self) -> String {
+impl std::fmt::Display for WebhookEvent {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
-            WebhookEvent::TransactionCompleted => "transaction.completed".to_string(),
-            WebhookEvent::AccountCreated => "account.created".to_string(),
+            WebhookEvent::TransactionCompleted => write!(f, "transaction.completed"),
+            WebhookEvent::AccountCreated => write!(f, "account.created"),
         }
     }
 }

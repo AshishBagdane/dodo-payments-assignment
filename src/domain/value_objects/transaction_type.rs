@@ -15,9 +15,12 @@ pub enum TransactionType {
     Transfer,
 }
 
-impl TransactionType {
-    /// Parse from string
-    pub fn from_str(s: &str) -> Result<Self, DomainError> {
+use std::str::FromStr;
+
+impl FromStr for TransactionType {
+    type Err = DomainError;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s.to_lowercase().as_str() {
             "credit" => Ok(Self::Credit),
             "debit" => Ok(Self::Debit),
@@ -28,7 +31,9 @@ impl TransactionType {
             ))),
         }
     }
+}
 
+ impl TransactionType {
     /// Convert to database string representation
     pub fn as_str(&self) -> &'static str {
         match self {
@@ -52,26 +57,26 @@ mod tests {
     #[test]
     fn test_transaction_type_from_str() {
         assert_eq!(
-            TransactionType::from_str("credit").unwrap(),
+            "credit".parse::<TransactionType>().unwrap(),
             TransactionType::Credit
         );
         assert_eq!(
-            TransactionType::from_str("CREDIT").unwrap(),
+            "CREDIT".parse::<TransactionType>().unwrap(),
             TransactionType::Credit
         );
         assert_eq!(
-            TransactionType::from_str("debit").unwrap(),
+            "debit".parse::<TransactionType>().unwrap(),
             TransactionType::Debit
         );
         assert_eq!(
-            TransactionType::from_str("transfer").unwrap(),
+            "transfer".parse::<TransactionType>().unwrap(),
             TransactionType::Transfer
         );
     }
 
     #[test]
     fn test_transaction_type_from_str_invalid() {
-        let result = TransactionType::from_str("invalid");
+        let result = "invalid".parse::<TransactionType>();
         assert!(result.is_err());
     }
 

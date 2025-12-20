@@ -203,4 +203,12 @@ impl AccountRepository for PostgresAccountRepository {
 
         Ok(())
     }
+
+    async fn health_check(&self) -> Result<(), RepositoryError> {
+        sqlx::query("SELECT 1")
+            .execute(&self.pool)
+            .await
+            .map_err(RepositoryError::from)?;
+        Ok(())
+    }
 }
