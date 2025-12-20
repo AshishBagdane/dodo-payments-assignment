@@ -1,0 +1,15 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "INSERT INTO accounts (id, business_name, balance, created_at, updated_at) VALUES ($1, $2, 0, NOW(), NOW())",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Uuid",
+        "Varchar"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "37db83ed90c57a971b594d2668b84a3f2d957527e7b3eefe682d22f8cee7d88b"
+}
