@@ -131,7 +131,15 @@ Prevents double-charging if a network failure occurs during a request.
 - **Soft Deletes:** Deleting financial data is scary. I used a `deleted_at` column so we can essentially "archive" accounts without losing history.
 - **Async Dispatch:** Webhooks are dispatched in background tasks to keep the API response time low.
 
-## What's Next?
-Day 4 will focus on comprehensive **Integration Testing** and generating formal API documentation.
+## Documentation
 
-Enjoy reviewing! Let me know if you have any questions. 🚀
+I've written up some detailed docs if you want to dive deeper:
+
+- **[DESIGN.md](DESIGN.md):** The "Why" behind the code. Architecture, safety, and trade-offs.
+- **[API.md](API.md):** The "How". Endpoint usage, curl snippets, and webhook verification.
+
+## Conclusion
+
+This was a fun build! I focused on making the core logic **bulletproof** (ACID transactions, strong types) while keeping the API **developer-friendly** (idempotency, clear errors).
+
+Ready for review! 🚀
