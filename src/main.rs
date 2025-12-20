@@ -94,7 +94,11 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .route("/webhooks", axum::routing::post(presentation::api::webhook::create_webhook))
         .layer(axum::middleware::from_fn_with_state(app_state.clone(), crate::presentation::middleware::auth::require_auth));
 
-    let api_router = Router::new()
+
+    // Create OpenAPI Spec
+    let openapi = crate::presentation::api::openapi::ApiDoc::openapi();
+
+    let api_router: Router = Router::new()
         // Public Endpoints
         .route("/health", get(presentation::api::health::health_check))
         .route("/accounts", axum::routing::post(presentation::api::account::create_account))
@@ -106,7 +110,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .with_state(app_state);
 
     let app = Router::new()
-        .merge(utoipa_swagger_ui::SwaggerUi::new("/swagger-ui").url("/api-docs/openapi.json", crate::presentation::api::openapi::ApiDoc::openapi()))
+        .merge(utoipa_swagger_ui::SwaggerUi::new("/swagger-ui").url("/api-docs/openapi.json", openapi))
         .merge(api_router)
         .into_make_service_with_connect_info::<SocketAddr>(); // Important for rate limiting
 

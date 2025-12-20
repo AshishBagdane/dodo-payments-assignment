@@ -1,10 +1,11 @@
 # Build stage
-FROM rust:1.87-slim as builder
+FROM rust:1-slim as builder
 
 # Install build dependencies
 RUN apt-get update && apt-get install -y \
     pkg-config \
     libssl-dev \
+    curl \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
@@ -19,7 +20,10 @@ RUN mkdir src && \
     rm -rf src
 
 # Copy actual source code
+# Copy actual source code
 COPY src ./src
+COPY .sqlx ./.sqlx
+ENV SQLX_OFFLINE=true
 
 # Build the application (this layer will be cached unless source changes)
 RUN touch src/main.rs && cargo build --release
